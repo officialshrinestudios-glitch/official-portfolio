@@ -25,7 +25,7 @@ export function Navbar({ hidden }: NavbarProps) {
           ))}
         </ul>
         <a
-          href="#contact"
+          href="tel:+916284147422"
           className="rounded-full border border-amber-200/30 bg-amber-200/15 px-4 py-2 text-xs tracking-[0.15em] text-amber-100 transition hover:bg-amber-100/20"
         >
           Book a Call

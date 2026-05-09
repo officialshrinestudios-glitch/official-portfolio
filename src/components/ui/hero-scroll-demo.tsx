@@ -14,12 +14,15 @@ type HeroScrollDemoProps = {
 export function HeroScrollDemo({ imageSources = [UNSPLASH_FALLBACK] }: HeroScrollDemoProps) {
   return (
     <div className="relative flex flex-col overflow-hidden pt-24 md:pt-28">
-      {/* Cinematic atmospheric glow */}
+      {/* Cinematic atmospheric glow - optimized */}
       <motion.div
-        className="pointer-events-none absolute left-1/2 top-1/4 h-[600px] w-[800px] -translate-x-1/2 rounded-full bg-white/5 opacity-50 blur-[120px]"
+        className="pointer-events-none absolute left-1/2 top-1/4 h-[600px] w-[800px] -translate-x-1/2 rounded-full opacity-50"
+        style={{
+          background: 'radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 60%)'
+        }}
         animate={{
           scale: [1, 1.05, 1],
-          opacity: [0.3, 0.5, 0.3],
+          opacity: [0.4, 0.6, 0.4],
         }}
         transition={{
           duration: 8,
