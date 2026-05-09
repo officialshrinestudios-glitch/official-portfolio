@@ -16,6 +16,7 @@ import { Navbar } from "./components/Navbar";
 import { SectionTitle } from "./components/SectionTitle";
 import { StudioImage } from "./components/StudioImage";
 import { HeroScrollDemo } from "./components/ui/hero-scroll-demo";
+import { SplineSection } from "./components/SplineSection";
 
 const services = [
   "Frontend Development",
@@ -165,14 +166,17 @@ export default function App() {
         <HeroScrollDemo imageSources={trainImageSources} />
       </section>
 
-      <section className="border-y border-white/10 bg-black/40 px-5 py-7 md:px-12">
-        <div className="mx-auto grid max-w-6xl gap-4 text-sm text-zinc-300 md:grid-cols-4">
+      <section className="border-y border-white/10 bg-black/40 px-5 py-7 md:px-12 relative z-20">
+        <div className="mx-auto grid max-w-6xl gap-4 text-sm text-zinc-300 md:grid-cols-4 relative z-20">
           <p>120% faster load times</p>
           <p>Motion-first premium systems</p>
           <p>Scalable backend architecture</p>
           <p>Trusted by luxury + SaaS teams</p>
         </div>
       </section>
+
+      <SplineSection />
+
 
       <section id="work" className="section-padding relative">
         <SectionTitle
