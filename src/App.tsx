@@ -87,7 +87,7 @@ function BeforeAfterSlider() {
           style={{ width: clipWidth }}
         >
           <StudioImage
-            sources={["/images/bloom.png", "/images/bloom.png"]}
+            sources={["/images/ugly-bloom.png", "/images/ugly-bloom.png"]}
             alt="After redesign"
             className="h-full w-[1200px] object-cover saturate-[0.9] brightness-[0.85]"
           />
