@@ -13,7 +13,7 @@ export function Navbar({ hidden }: NavbarProps) {
       animate={{ y: hidden ? -120 : 0, opacity: hidden ? 0 : 1 }}
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
-      <nav className="glass flex items-center justify-between rounded-full px-4 py-3 md:px-7">
+      <nav className="glass flex items-center justify-between rounded-full px-4 py-3 md:px-7" style={{ border: 'none', boxShadow: '0 20px 80px rgba(0, 0, 0, 0.45)' }}>
         <div className="font-serif text-lg tracking-wide text-zinc-100">SHRI.NE</div>
         <ul className="hidden items-center gap-6 text-sm tracking-wide text-zinc-200 md:flex">
           {links.map((link) => (

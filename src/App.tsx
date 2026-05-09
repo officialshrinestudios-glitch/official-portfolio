@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useScroll, useTransform, useMotionValue, useSpring } from "framer-motion";
 import {
   ArrowUpRight,
   CirclePlay,
@@ -54,54 +54,60 @@ const faceImageSources = ["/images/face-grid.png", faceImage];
 
 function BeforeAfterSlider() {
   const boxRef = useRef<HTMLDivElement>(null);
-  const [split, setSplit] = useState(52);
+  const x = useMotionValue(50);
+  const springX = useSpring(x, { stiffness: 400, damping: 40, restDelta: 0.001 });
+  const clipWidth = useTransform(springX, (val) => `${val}%`);
 
   const updateSplit = (clientX: number) => {
     if (!boxRef.current) return;
     const rect = boxRef.current.getBoundingClientRect();
     const next = ((clientX - rect.left) / rect.width) * 100;
-    setSplit(Math.max(8, Math.min(92, next)));
+    x.set(Math.max(5, Math.min(95, next)));
   };
 
   return (
     <div
       ref={boxRef}
-      className="glass relative overflow-hidden rounded-3xl p-2"
+      className="glass group relative overflow-hidden rounded-[2rem] p-3 cursor-ew-resize"
       onMouseMove={(event) => {
         if (event.buttons === 1) updateSplit(event.clientX);
       }}
-      onClick={(event) => updateSplit(event.clientX)}
+      onMouseDown={(event) => updateSplit(event.clientX)}
     >
-      <div className="relative h-[300px] overflow-hidden rounded-2xl md:h-[440px]">
+      <div className="relative h-[350px] overflow-hidden rounded-[1.5rem] md:h-[500px]">
         <StudioImage
           sources={faceImageSources}
           alt="Before redesign"
           className="absolute inset-0 h-full w-full object-cover"
         />
-        <div
+        <motion.div
           className="absolute inset-y-0 left-0 overflow-hidden"
-          style={{ width: `${split}%` }}
+          style={{ width: clipWidth }}
         >
           <StudioImage
             sources={trainImageSources}
             alt="After redesign"
-            className="h-full w-[1200px] object-cover saturate-[0.9] brightness-90"
+            className="h-full w-[1200px] object-cover saturate-[0.9] brightness-[0.85]"
           />
-        </div>
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_20%,rgba(240,190,120,0.3),transparent_35%)]" />
-        <div className="absolute inset-0 bg-black/25" />
-        <div
-          className="absolute inset-y-0 z-20 w-px bg-white/85 shadow-[0_0_25px_rgba(255,255,255,0.55)]"
-          style={{ left: `${split}%` }}
-        />
-        <div
-          className="absolute top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/40 bg-black/35 px-3 py-1 text-xs tracking-[0.22em] text-white"
-          style={{ left: `${split}%` }}
+          <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
+        </motion.div>
+        
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none" />
+        
+        <motion.div
+          className="absolute inset-y-0 z-20 w-[1px] bg-white/70 shadow-[0_0_20px_rgba(255,255,255,0.8)]"
+          style={{ left: clipWidth }}
+        >
+           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-16 w-1 rounded-full bg-white blur-[2px] opacity-70" />
+        </motion.div>
+        <motion.div
+          className="absolute top-1/2 z-30 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/60 px-4 py-2 text-[10px] tracking-[0.3em] text-white backdrop-blur-xl transition-transform duration-500 group-hover:scale-105"
+          style={{ left: clipWidth }}
         >
           DRAG
-        </div>
-        <p className="absolute left-4 top-4 text-xs tracking-[0.2em] text-zinc-200">BEFORE</p>
-        <p className="absolute right-4 top-4 text-xs tracking-[0.2em] text-zinc-100">AFTER</p>
+        </motion.div>
+        <p className="absolute left-6 top-6 text-[10px] tracking-[0.3em] text-zinc-300">BEFORE</p>
+        <p className="absolute right-6 top-6 text-[10px] tracking-[0.3em] text-zinc-300">AFTER</p>
       </div>
     </div>
   );
@@ -112,6 +118,10 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [hideNav, setHideNav] = useState(false);
   const lastY = useRef(0);
+
+  const { scrollYProgress } = useScroll();
+  const bgY = useTransform(scrollYProgress, [0, 1], ["0%", "30%"]);
+  const cardsY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -140,7 +150,13 @@ export default function App() {
   }, []);
 
   return (
-    <main className="ambient-bg text-zinc-100">
+    <main className="text-zinc-100 relative bg-[#030303] overflow-hidden">
+      <motion.div 
+        className="pointer-events-none fixed inset-0 z-0 opacity-60 ambient-bg" 
+        style={{ y: bgY }}
+      />
+      
+      <div className="relative z-10">
       {loading && <Loader progress={progress} />}
       <Navbar hidden={hideNav} />
 
@@ -158,64 +174,69 @@ export default function App() {
         </div>
       </section>
 
-      <section id="work" className="section-padding">
+      <section id="work" className="section-padding relative">
         <SectionTitle
           label="FEATURED WORK"
           title="Cinematic case studies with engineering depth"
           description="Every project combines emotional visual storytelling with robust frontend architecture and performance-grade implementation."
         />
-        <div className="mx-auto grid max-w-6xl gap-6 md:grid-cols-3">
+        <motion.div style={{ y: cardsY }} className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
           {[
             {
               title: "Noir Residence",
               category: "Luxury website",
               stack: "React · Tailwind · Motion",
-              tone: "from-amber-200/20 via-zinc-800 to-black",
+              tone: "from-amber-200/5 via-zinc-800/10 to-black",
               image: trainImageSources
             },
             {
               title: "Arclight Platform",
               category: "SaaS product frontend",
               stack: "TypeScript · UI Systems · API",
-              tone: "from-sky-200/20 via-zinc-800 to-black",
+              tone: "from-sky-200/5 via-zinc-800/10 to-black",
               image: faceImageSources
             },
             {
               title: "Foundry One",
               category: "Full-stack operating platform",
               stack: "Node · PostgreSQL · React",
-              tone: "from-rose-200/20 via-zinc-800 to-black",
+              tone: "from-rose-200/5 via-zinc-800/10 to-black",
               image: trainImageSources
             }
-          ].map((item) => (
+          ].map((item, index) => (
             <motion.article
               key={item.title}
-              className={`glass group relative overflow-hidden rounded-3xl bg-gradient-to-br p-6 ${item.tone}`}
-              whileHover={{ y: -8 }}
-              transition={{ duration: 0.32 }}
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, amount: 0.1 }}
+              transition={{ duration: 0.8, delay: index * 0.15, ease: [0.16, 1, 0.3, 1] }}
+              className={`glass group relative overflow-hidden rounded-[2rem] bg-gradient-to-br p-8 ${item.tone} shadow-[0_30px_60px_rgba(0,0,0,0.6)]`}
+              whileHover={{ y: -10, scale: 1.02 }}
             >
               <StudioImage
                 sources={item.image}
                 alt={item.title}
-                className="absolute inset-0 h-full w-full object-cover opacity-30 transition duration-500 group-hover:scale-105 group-hover:opacity-45"
+                className="absolute inset-0 h-full w-full object-cover opacity-[0.25] transition-all duration-700 ease-[0.16,1,0.3,1] group-hover:scale-110 group-hover:opacity-40"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/45 to-black/20" />
-              <div className="relative z-10">
-              <p className="text-xs tracking-[0.2em] text-zinc-300">{item.category}</p>
-              <h3 className="mt-3 font-serif text-3xl text-zinc-100">{item.title}</h3>
-              <p className="mt-3 text-sm text-zinc-300">{item.stack}</p>
-              <div className="mt-8 flex gap-2">
-                <button className="rounded-full border border-white/30 px-4 py-2 text-xs tracking-[0.15em]">
-                  Live Preview
-                </button>
-                <button className="rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs tracking-[0.15em]">
-                  Case Study
-                </button>
-              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/50 to-transparent" />
+              <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_0%,rgba(255,255,255,0.05)_0%,transparent_60%)] opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
+              <div className="relative z-10 flex h-full flex-col justify-end">
+                <div className="mb-8"></div>
+                <p className="text-[10px] tracking-[0.25em] text-zinc-400">{item.category}</p>
+                <h3 className="mt-4 font-serif text-4xl text-zinc-100 drop-shadow-md md:text-5xl">{item.title}</h3>
+                <p className="mt-4 text-sm tracking-wide text-zinc-400">{item.stack}</p>
+                <div className="mt-8 flex flex-wrap gap-3">
+                  <button className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] tracking-[0.2em] transition hover:bg-white/10 hover:border-white/30">
+                    Live Preview
+                  </button>
+                  <button className="rounded-full border border-transparent bg-white/10 px-5 py-2.5 text-[10px] tracking-[0.2em] transition hover:bg-white/20">
+                    Case Study
+                  </button>
+                </div>
               </div>
             </motion.article>
           ))}
-        </div>
+        </motion.div>
       </section>
 
       <section className="section-padding" id="services">
@@ -272,20 +293,24 @@ export default function App() {
         </div>
       </section>
 
-      <section id="about" className="section-padding">
-        <div className="mx-auto grid max-w-6xl gap-12 md:grid-cols-2">
+      <section id="about" className="section-padding relative">
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[#050505] to-transparent pointer-events-none opacity-50" />
+        <div className="mx-auto grid max-w-6xl gap-16 md:grid-cols-2 relative z-10">
           <div>
-            <p className="text-xs tracking-[0.3em] text-zinc-400">ABOUT</p>
-            <h2 className="mt-2 font-serif text-5xl leading-tight md:text-6xl">
+            <p className="text-[10px] tracking-[0.35em] text-zinc-400">ABOUT</p>
+            <h2 className="mt-4 font-serif text-6xl leading-[1.1] md:text-7xl lg:text-[5rem]">
               Elite engineering with editorial creative direction
             </h2>
           </div>
-          <p className="text-lg leading-relaxed text-zinc-300">
-            SHRI.NE is an elite team of developers and designers focused on premium
-            frontend engineering, cinematic interfaces, and modern full-stack execution. We shape
-            products with strategic clarity and high-end visual craftsmanship, then deliver them
-            with scalable architecture and measurable performance.
-          </p>
+          <div className="flex flex-col justify-center">
+            <p className="text-lg leading-[1.8] text-zinc-300 md:text-xl">
+              SHRI.NE is an elite team of developers and designers focused on premium
+              frontend engineering, cinematic interfaces, and modern full-stack execution. 
+              <br/><br/>
+              We shape products with strategic clarity and high-end visual craftsmanship, 
+              then deliver them with scalable architecture and measurable performance.
+            </p>
+          </div>
         </div>
       </section>
 
@@ -334,53 +359,61 @@ export default function App() {
         </div>
       </section>
 
-      <section id="contact" className="section-padding pb-20">
-        <div className="glass mx-auto max-w-6xl rounded-3xl p-7 md:p-12">
-          <p className="text-xs tracking-[0.28em] text-zinc-300">CONTACT</p>
-          <h2 className="mt-2 max-w-3xl font-serif text-5xl leading-tight md:text-7xl">
+      <section id="contact" className="section-padding pb-28 relative">
+        {/* Soft volumetric glow behind contact */}
+        <div className="absolute left-1/2 top-1/2 h-[500px] w-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-white/5 opacity-40 blur-[100px] pointer-events-none" />
+        
+        <div className="glass mx-auto max-w-6xl rounded-[3rem] p-8 md:p-16 relative z-10 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent pointer-events-none" />
+          
+          <p className="text-[10px] tracking-[0.35em] text-zinc-400">CONTACT</p>
+          <h2 className="mt-4 max-w-3xl font-serif text-6xl leading-[1.05] md:text-7xl lg:text-8xl">
             Let&apos;s build something unforgettable.
           </h2>
-          <div className="mt-8 grid gap-8 md:grid-cols-2">
-            <div className="space-y-3 text-zinc-300">
-              <p className="flex items-center gap-2">
-                <Mail size={16} /> hello@yourstudioname.com
-              </p>
-              <p>Fiverr · GitHub · Instagram · LinkedIn</p>
-              <p className="text-sm">Average response time: under 24 hours</p>
+          <div className="mt-16 grid gap-12 md:grid-cols-2">
+            <div className="space-y-6 text-zinc-300">
+              <a href="mailto:hello@yourstudioname.com" className="flex items-center gap-3 text-lg hover:text-white transition-colors">
+                <Mail size={20} /> hello@yourstudioname.com
+              </a>
+              <p className="text-sm tracking-wide text-zinc-400">Fiverr · GitHub · Instagram · LinkedIn</p>
+              <p className="text-xs tracking-wider text-zinc-500">Average response time: under 24 hours</p>
             </div>
-            <form className="space-y-3">
+            <form className="space-y-4">
               <input
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 outline-none"
+                className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none transition-colors focus:border-white/30 focus:bg-black/60"
                 placeholder="Your name"
               />
               <input
-                className="w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 outline-none"
+                className="w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none transition-colors focus:border-white/30 focus:bg-black/60"
                 placeholder="Email"
               />
               <textarea
-                className="h-28 w-full rounded-xl border border-white/15 bg-black/40 px-4 py-3 outline-none"
+                className="h-32 w-full rounded-2xl border border-white/10 bg-black/40 px-5 py-4 outline-none transition-colors focus:border-white/30 focus:bg-black/60"
                 placeholder="Project brief"
               />
-              <button className="rounded-full border border-white/25 bg-white px-5 py-2 text-black">
-                Start Conversation
+              <button className="group relative overflow-hidden rounded-full bg-white px-8 py-4 text-sm font-medium text-black transition-transform hover:scale-[1.02]">
+                <span className="relative z-10">Start Conversation</span>
+                <div className="absolute inset-0 bg-zinc-200 translate-y-[100%] transition-transform duration-500 group-hover:translate-y-0" />
               </button>
             </form>
           </div>
         </div>
       </section>
 
-      <footer className="border-t border-white/10 px-5 py-8 text-xs tracking-[0.2em] text-zinc-500 md:px-12">
-        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
+      <footer className="border-t border-white/5 px-5 py-12 text-[10px] tracking-[0.3em] text-zinc-500 md:px-12 relative z-10 bg-black/50">
+        <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-6">
           <p>© 2026 SHRI.NE</p>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4 opacity-60 hover:opacity-100 transition-opacity duration-500">
             {[CirclePlay, Sparkles, Layers3, Code2, Database, Globe, Figma, ArrowUpRight].map(
               (Icon, index) => (
-                <Icon key={index} size={14} />
+                <Icon key={index} size={16} className="text-zinc-400" />
               )
             )}
           </div>
         </div>
       </footer>
+      
+      </div> {/* End of relative z-10 wrapper */}
     </main>
   );
 }
