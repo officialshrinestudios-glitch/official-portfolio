@@ -1,5 +1,5 @@
-import { type CSSProperties, type ImgHTMLAttributes, useEffect, useMemo, useRef, useState } from "react";
-import { motion, useMotionValue, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion } from "framer-motion";
 import {
   ArrowUpRight,
   CirclePlay,
@@ -14,6 +14,8 @@ import {
 import { Loader } from "./components/Loader";
 import { Navbar } from "./components/Navbar";
 import { SectionTitle } from "./components/SectionTitle";
+import { StudioImage } from "./components/StudioImage";
+import { HeroScrollDemo } from "./components/ui/hero-scroll-demo";
 
 const services = [
   "Frontend Development",
@@ -49,26 +51,6 @@ const faceImage =
   "/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img2-eed23274-7468-41a9-99b9-98f946585a1f.png";
 const trainImageSources = ["/images/cinematic-window.png", trainImage];
 const faceImageSources = ["/images/face-grid.png", faceImage];
-
-type StudioImageProps = ImgHTMLAttributes<HTMLImageElement> & {
-  sources: string[];
-};
-
-function StudioImage({ sources, ...props }: StudioImageProps) {
-  const [sourceIndex, setSourceIndex] = useState(0);
-
-  return (
-    <img
-      {...props}
-      src={sources[sourceIndex]}
-      onError={() => {
-        if (sourceIndex < sources.length - 1) {
-          setSourceIndex(sourceIndex + 1);
-        }
-      }}
-    />
-  );
-}
 
 function BeforeAfterSlider() {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -130,10 +112,6 @@ export default function App() {
   const [loading, setLoading] = useState(true);
   const [hideNav, setHideNav] = useState(false);
   const lastY = useRef(0);
-  const mouseX = useMotionValue(50);
-  const mouseY = useMotionValue(50);
-  const { scrollYProgress } = useScroll();
-  const heroParallax = useTransform(scrollYProgress, [0, 0.35], [0, 160]);
 
   useEffect(() => {
     const timer = window.setInterval(() => {
@@ -155,115 +133,20 @@ export default function App() {
       setHideNav(currentY > lastY.current && currentY > 150);
       lastY.current = currentY;
     };
-    const onMouse = (event: MouseEvent) => {
-      mouseX.set((event.clientX / window.innerWidth) * 100);
-      mouseY.set((event.clientY / window.innerHeight) * 100);
-    };
     window.addEventListener("scroll", onScroll);
-    window.addEventListener("mousemove", onMouse);
     return () => {
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("mousemove", onMouse);
     };
-  }, [mouseX, mouseY]);
-
-  const particles = useMemo(
-    () =>
-      Array.from({ length: 20 }, (_, index) => ({
-        id: index,
-        left: `${Math.random() * 100}%`,
-        top: `${Math.random() * 100}%`,
-        delay: Math.random() * 3
-      })),
-    []
-  );
+  }, []);
 
   return (
     <main className="ambient-bg text-zinc-100">
       {loading && <Loader progress={progress} />}
       <Navbar hidden={hideNav} />
 
-      <section className="grain relative flex min-h-screen items-center overflow-hidden px-5 pb-20 pt-28 md:px-14">
-        <motion.div className="absolute inset-0"
-          style={{ y: heroParallax }}
-          initial={{ scale: 1.18, opacity: 0 }}
-          animate={{ scale: 1.05, opacity: 0.45 }}
-          transition={{ duration: 1.2, ease: "easeOut", delay: 0.2 }}
-        >
-          <StudioImage
-            sources={trainImageSources}
-            alt="Cinematic landscape through train window"
-            className="h-full w-full object-cover"
-          />
-        </motion.div>
-        <div className="absolute inset-0 bg-gradient-to-b from-black/55 via-black/50 to-[#050505]" />
-        <motion.div
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(circle at var(--x) var(--y), rgba(255,218,168,0.16), transparent 35%)",
-            x: 0,
-            y: useTransform(heroParallax, (value) => value * 0.4),
-            "--x": useTransform(mouseX, (x) => `${x}%`),
-            "--y": useTransform(mouseY, (y) => `${y}%`)
-          } as CSSProperties}
-        />
-        {particles.map((particle) => (
-          <motion.span
-            key={particle.id}
-            className="absolute h-1.5 w-1.5 rounded-full bg-white/45"
-            style={{ left: particle.left, top: particle.top }}
-            animate={{ y: [0, -16, 0], opacity: [0.1, 0.7, 0.1] }}
-            transition={{ duration: 5, delay: particle.delay, repeat: Number.POSITIVE_INFINITY }}
-          />
-        ))}
-        <div className="relative z-10 mx-auto w-full max-w-6xl">
-          <motion.p
-            initial={{ y: 30, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-            className="mb-4 text-xs tracking-[0.35em] text-zinc-300"
-          >
-            IMMERSIVE CREATIVE TECHNOLOGY STUDIO
-          </motion.p>
-          <motion.h1
-            initial={{ y: 28, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
-            className="font-serif text-[clamp(2.6rem,8vw,7rem)] leading-[0.95] text-zinc-100"
-          >
-            Crafting cinematic digital experiences for modern brands and ambitious founders.
-          </motion.h1>
-          <motion.p
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            className="mt-6 max-w-2xl text-lg text-zinc-300 md:text-xl"
-          >
-            We are a collective of elite engineers, frontend specialists, designers, and creative
-            developers building premium websites, immersive products, and modern platforms that
-            feel as powerful as they perform.
-          </motion.p>
-          <motion.div
-            initial={{ y: 24, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="mt-10 flex flex-wrap gap-3"
-          >
-            <a
-              href="#work"
-              className="glass rounded-full px-6 py-3 text-sm tracking-[0.18em] text-zinc-100 transition hover:-translate-y-0.5"
-            >
-              View Our Work
-            </a>
-            <a
-              href="#contact"
-              className="rounded-full border border-white/35 bg-white/90 px-6 py-3 text-sm tracking-[0.18em] text-black transition hover:bg-white"
-            >
-              Start a Project
-            </a>
-          </motion.div>
-        </div>
+      <section className="grain relative overflow-hidden">
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/50 via-black/25 to-[#050505]" />
+        <HeroScrollDemo imageSources={trainImageSources} />
       </section>
 
       <section className="border-y border-white/10 bg-black/40 px-5 py-7 md:px-12">
