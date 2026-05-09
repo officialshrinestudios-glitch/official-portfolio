@@ -16,7 +16,7 @@ export function HeroScrollDemo({ imageSources = [UNSPLASH_FALLBACK] }: HeroScrol
       <ContainerScroll
         titleComponent={
           <div className="space-y-4 px-2">
-            <p className="text-[10px] tracking-[0.45em] text-zinc-500">[YOUR STUDIO NAME]</p>
+            <p className="text-[10px] tracking-[0.45em] text-zinc-500">SHRI.NE</p>
             <h1 className="font-serif text-4xl leading-[1.05] text-zinc-100 md:text-6xl">
               <span className="block text-lg font-normal tracking-wide text-zinc-500 md:text-xl">
                 Scroll
@@ -24,6 +24,7 @@ export function HeroScrollDemo({ imageSources = [UNSPLASH_FALLBACK] }: HeroScrol
               <span className="mt-1 block text-5xl md:text-[4.5rem] lg:text-[5.5rem]">
                 Into the build.
               </span>
+              <br></br>
             </h1>
           </div>
         }
@@ -49,7 +50,7 @@ export function HeroScrollDemo({ imageSources = [UNSPLASH_FALLBACK] }: HeroScrol
         </a>
         <a
           href="#contact"
-          className="rounded-full border border-white/35 bg-white/90 px-6 py-3 text-xs tracking-[0.2em] text-black transition hover:bg-white md:text-sm"
+          className="glass rounded-full px-6 py-3 text-xs tracking-[0.2em] text-zinc-100 transition hover:-translate-y-0.5 md:text-sm"
         >
           Start a Project
         </a>

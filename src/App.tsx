@@ -49,7 +49,7 @@ const trainImage =
   "/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img1-fdd2bcf2-3a2b-4786-906a-76c87943bf7e.png";
 const faceImage =
   "/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img2-eed23274-7468-41a9-99b9-98f946585a1f.png";
-const trainImageSources = ["/images/cinematic-window.png", trainImage];
+const trainImageSources = ["/images/hero.png", trainImage];
 const faceImageSources = ["/images/face-grid.png", faceImage];
 
 function BeforeAfterSlider() {
@@ -281,7 +281,7 @@ export default function App() {
             </h2>
           </div>
           <p className="text-lg leading-relaxed text-zinc-300">
-            [YOUR STUDIO NAME] is an elite team of developers and designers focused on premium
+            SHRI.NE is an elite team of developers and designers focused on premium
             frontend engineering, cinematic interfaces, and modern full-stack execution. We shape
             products with strategic clarity and high-end visual craftsmanship, then deliver them
             with scalable architecture and measurable performance.
@@ -371,7 +371,7 @@ export default function App() {
 
       <footer className="border-t border-white/10 px-5 py-8 text-xs tracking-[0.2em] text-zinc-500 md:px-12">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3">
-          <p>© 2026 [YOUR STUDIO NAME]</p>
+          <p>© 2026 SHRI.NE</p>
           <div className="flex items-center gap-3">
             {[CirclePlay, Sparkles, Layers3, Code2, Database, Globe, Figma, ArrowUpRight].map(
               (Icon, index) => (

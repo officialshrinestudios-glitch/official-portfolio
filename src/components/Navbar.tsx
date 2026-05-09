@@ -14,7 +14,7 @@ export function Navbar({ hidden }: NavbarProps) {
       transition={{ duration: 0.35, ease: "easeInOut" }}
     >
       <nav className="glass flex items-center justify-between rounded-full px-4 py-3 md:px-7">
-        <div className="font-serif text-lg tracking-wide text-zinc-100">[YOUR STUDIO NAME]</div>
+        <div className="font-serif text-lg tracking-wide text-zinc-100">SHRI.NE</div>
         <ul className="hidden items-center gap-6 text-sm tracking-wide text-zinc-200 md:flex">
           {links.map((link) => (
             <li key={link}>
