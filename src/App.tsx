@@ -48,10 +48,11 @@ const techGroups = {
 
 const trainImage =
   "/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img1-fdd2bcf2-3a2b-4786-906a-76c87943bf7e.png";
-const faceImage =
-  "/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img2-eed23274-7468-41a9-99b9-98f946585a1f.png";
+//const faceImage =
+  //"/@fs/C:/Users/smrid/.cursor/projects/c-Users-smrid-freelance-luxuryportfolio/assets/c__Users_smrid_AppData_Roaming_Cursor_User_workspaceStorage_empty-window_images_img2-eed23274-7468-41a9-99b9-98f946585a1f.png";
+// unused in current version
 const trainImageSources = ["/images/hero.png", trainImage];
-const faceImageSources = ["/images/face-grid.png", faceImage];
+// faceImageSources removed (unused)
 
 function BeforeAfterSlider() {
   const boxRef = useRef<HTMLDivElement>(null);
@@ -86,7 +87,7 @@ function BeforeAfterSlider() {
           style={{ width: clipWidth }}
         >
           <StudioImage
-          sources={["/images/ugly-bloom.png", "/images/ugly-bloom.png"]}
+            sources={["/images/bloom.png", "/images/bloom.png"]}
             alt="After redesign"
             className="h-full w-[1200px] object-cover saturate-[0.9] brightness-[0.85]"
           />
