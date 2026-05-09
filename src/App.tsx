@@ -77,7 +77,7 @@ function BeforeAfterSlider() {
     >
       <div className="relative h-[350px] overflow-hidden rounded-[1.5rem] md:h-[500px]">
         <StudioImage
-          sources={faceImageSources}
+          sources={["/images/bloom.png", "/images/bloom.png"]}
           alt="Before redesign"
           className="absolute inset-0 h-full w-full object-cover"
         />
@@ -86,14 +86,14 @@ function BeforeAfterSlider() {
           style={{ width: clipWidth }}
         >
           <StudioImage
-            sources={trainImageSources}
+          sources={["/images/ugly-bloom.png", "/images/ugly-bloom.png"]}
             alt="After redesign"
             className="h-full w-[1200px] object-cover saturate-[0.9] brightness-[0.85]"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-transparent" />
         </motion.div>
 
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(0,0,0,0)_0%,rgba(0,0,0,0.4)_100%)] pointer-events-none" />
+        <div className="absolute inset-0 pointer-events-none" style={{ background: 'radial-gradient(circle_at_50%_50%, rgba(0,0,0,0) 0%, rgba(0,0,0,0.4) 100%)' }} />
 
         <motion.div
           className="absolute inset-y-0 z-20 w-[1px] bg-white/70 shadow-[0_0_20px_rgba(255,255,255,0.8)]"
@@ -181,31 +181,35 @@ export default function App() {
         <section id="work" className="section-padding relative">
           <SectionTitle
             label="FEATURED WORK"
-            title="Cinematic case studies with engineering depth"
+            title="Clients we have worked with "
             description="Every project combines emotional visual storytelling with robust frontend architecture and performance-grade implementation."
           />
           <motion.div style={{ y: cardsY }} className="mx-auto grid max-w-6xl gap-8 md:grid-cols-3">
             {[
               {
-                title: "Noir Residence",
-                category: "Luxury website",
-                stack: "React · Tailwind · Motion",
+                title: "VYRO Gym",
+                category: "Gym website",
+                stack: "React · Tailwind",
                 tone: "from-amber-200/5 via-zinc-800/10 to-black",
-                image: trainImageSources
+                image: ["/images/gym.png"],
+                previewUrl: "https://gym-sample-dun.vercel.app/"
               },
               {
-                title: "Arclight Platform",
-                category: "SaaS product frontend",
+                title: "Bloom Cafe",
+                category: "Website for a cafe owner",
                 stack: "TypeScript · UI Systems · API",
                 tone: "from-sky-200/5 via-zinc-800/10 to-black",
-                image: faceImageSources
+                image: ["/images/bloom.png"],
+                previewUrl: "https://bloom-cafe-deploy.vercel.app/"
               },
               {
-                title: "Foundry One",
-                category: "Full-stack operating platform",
+                title: "Shri.ne",
+                category: "Our own cinematic website",
                 stack: "Node · PostgreSQL · React",
                 tone: "from-rose-200/5 via-zinc-800/10 to-black",
-                image: trainImageSources
+                image: ["/images/shrine.png"],
+                previewUrl:
+                  "https://shrine-iothzh3sm-shrine-s-projects.vercel.app"
               }
             ].map((item, index) => (
               <motion.article
@@ -230,12 +234,14 @@ export default function App() {
                   <h3 className="mt-4 font-serif text-4xl text-zinc-100 drop-shadow-md md:text-5xl">{item.title}</h3>
                   <p className="mt-4 text-sm tracking-wide text-zinc-400">{item.stack}</p>
                   <div className="mt-8 flex flex-wrap gap-3">
-                    <button className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] tracking-[0.2em] transition hover:bg-white/10 hover:border-white/30">
+                    <a
+                      href={item.previewUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="rounded-full border border-white/20 px-5 py-2.5 text-[10px] tracking-[0.2em] transition hover:bg-white/10 hover:border-white/30"
+                    >
                       Live Preview
-                    </button>
-                    <button className="rounded-full border border-transparent bg-white/10 px-5 py-2.5 text-[10px] tracking-[0.2em] transition hover:bg-white/20">
-                      Case Study
-                    </button>
+                    </a>
                   </div>
                 </div>
               </motion.article>
@@ -351,13 +357,13 @@ export default function App() {
           />
           <div className="mx-auto grid max-w-6xl gap-4 md:grid-cols-3">
             {[
-              "They translated our vision into an immersive product launch experience with perfect execution.",
-              "A rare blend of technical rigor and creative instinct. Every detail felt deliberate.",
-              "From strategy to polish, the final platform looked premium and performed flawlessly."
+              "Best Service Available, they made it exactly like we wanted.",
+              "Awesome team! Awesome Service.",
+              "You guys should work with them without a doubt, they are the best at what they do!."
             ].map((quote) => (
               <article key={quote} className="glass rounded-2xl p-6">
                 <p className="text-base italic text-zinc-200">“{quote}”</p>
-                <p className="mt-4 text-xs tracking-[0.18em] text-zinc-400">FICTIONAL CLIENT</p>
+                <p className="mt-4 text-xs tracking-[0.18em] text-zinc-400">ANONYMOUS CLIENT</p>
               </article>
             ))}
           </div>
@@ -384,12 +390,11 @@ export default function App() {
                 <a href="mailto:official.shri.ne.studios@gmail.com" className="flex items-center gap-3 text-lg hover:text-white transition-colors">
                   <Mail size={20} /> official.shri.ne.studios@gmail.com
                 </a>
-                <p className="text-sm tracking-wide text-zinc-400">Fiverr · GitHub · Instagram · LinkedIn</p>
                 <p className="text-xs tracking-wider text-zinc-500">Average response time: under 24 hours</p>
               </div>
-              <form 
-                action="https://docs.google.com/forms/d/e/1FAIpQLSdvj8MVN7mhAQntNo6qSBhLD_pfZ-Ks5YhdzBTLtLwuKTqpNg/formResponse" 
-                method="POST" 
+              <form
+                action="https://docs.google.com/forms/d/e/1FAIpQLSdvj8MVN7mhAQntNo6qSBhLD_pfZ-Ks5YhdzBTLtLwuKTqpNg/formResponse"
+                method="POST"
                 target="_blank"
                 className="space-y-4"
               >
